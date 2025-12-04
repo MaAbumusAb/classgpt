@@ -1,124 +1,260 @@
-
 # ClassGPT: Your Multilingual AI Study Assistant 🌍📚
-
-
 
 ## ✨ Vision Statement
 
-**ClassGPT** is an innovative AI-powered educational assistant dedicated to making quality learning accessible and culturally relevant for learners in Nigeria and beyond. Our core mission, as of **June 2025**, is to **bridge educational language barriers** by providing AI-driven explanations, quizzes, and summaries directly in local languages, starting with **Hausa** and **Arabic**, alongside English.
+**ClassGPT** is an innovative AI-powered educational assistant dedicated to making quality learning accessible and culturally relevant for learners in Nigeria and beyond. Our core mission is to **bridge educational language barriers** by providing AI-driven explanations, quizzes, and summaries directly in local languages, starting with **Hausa** and **Arabic**, alongside English.
 
-## 🌟 Features (Current MVP)
+## 🏗️ Architecture
 
-ClassGPT, in its current Minimum Viable Product (MVP) stage, showcases the power of AI to interact with users in their preferred local language:
+ClassGPT is now built as a modern, scalable monorepo with the following structure:
 
-* **Multilingual Q&A:** Engage with the AI in **English**, **Hausa**, and **Arabic**. The AI aims to understand your input and provide responses in the selected output language.
-* **Three Core Tasks:**
-    * **Explain It:** Get simple, clear explanations of any topic.
-    * **Generate Quiz:** Create a single quiz question to test your understanding.
-    * **Summarize Topic:** Obtain concise summaries of complex subjects.
-* **Interactive UI:** A user-friendly interface built with Streamlit for a seamless experience.
-* **Powered by LLaMA 3:** Leveraging the advanced capabilities of the LLaMA 3 model via Hugging Face Inference API for intelligent responses.
+- **Frontend**: Next.js + TypeScript + Tailwind CSS
+- **Backend**: NestJS + Prisma + PostgreSQL
+- **Worker**: BullMQ queue worker for async processing
+- **Packages**: Shared UI components and SDK
+- **Infrastructure**: Docker Compose for local development
 
 ## 🚀 Getting Started
 
-Follow these steps to get ClassGPT up and running on your local machine.
-
 ### Prerequisites
 
-* Python 3.8+
-* `pip` (Python package installer)
-* A Hugging Face account and an **API Token** with read access.
-
-### ⚠️ Security Warning: Environment Variables
-
-**NEVER hardcode your API tokens directly into your code.** For secure local development and deployment, we use environment variables.
-
-1.  **Generate/Access Your Hugging Face API Token:**
-    * Go to [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens).
-    * Generate a new token (or use an existing one). Ensure it has `read` access.
-    * **Important:** If you've previously shared any token publicly, **revoke it immediately** and generate a new one.
-
-2.  **Set Environment Variables:**
-    Open your terminal or command prompt and set the following variables **before** running the app.
-
-    * **Linux / macOS:**
-        ```bash
-        export HF_TOKEN="hf_YOUR_NEW_TOKEN_HERE"
-        export HF_LLAMA3_MODEL="meta-llama/Llama-3-8b-instruct" # Or "meta-llama/Llama-3-70b-instruct" if you choose
-        ```
-    * **Windows (Command Prompt):**
-        ```cmd
-        set HF_TOKEN="hf_YOUR_NEW_TOKEN_HERE"
-        set HF_LLAMA3_MODEL="meta-llama/Llama-3-8b-instruct"
-        ```
-    *Replace `"hf_YOUR_NEW_TOKEN_HERE"` with your actual Hugging Face API token.*
-    *Ensure `HF_LLAMA3_MODEL` matches the exact ID of the LLaMA 3 model you intend to use on Hugging Face (and that you have accepted its license terms).*
+- **Node.js** 18+ and **pnpm** 8+
+- **Docker** and **Docker Compose** (for local development)
+- **Git** for version control
 
 ### Installation
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone [https://github.com/MaAbumusAb/ClassGpt-](https://github.com/MaAbumusAb/ClassGpt-)
-    cd ClassGpt-
-    ```
+1. **Clone the repository:**
 
-2.  **Create a Virtual Environment (Recommended):**
-    ```bash
-    python -m venv venv
-    # On Linux/macOS:
-    source venv/bin/activate
-    # On Windows:
-    # .\venv\Scripts\activate
-    ```
+   ```bash
+   git clone https://github.com/MaAbumusAb/classgpt.git
+   cd classgpt
+   ```
 
-3.  **Install Dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-    *(Ensure your `requirements.txt` contains `streamlit`, `requests`, and `huggingface_hub`)*
+2. **Install pnpm** (if not already installed):
 
-### Running the App
+   ```bash
+   npm install -g pnpm
+   ```
 
-Once your environment variables are set and dependencies are installed, run the Streamlit app:
+3. **Install dependencies:**
+
+   ```bash
+   pnpm install
+   ```
+
+4. **Set up environment variables:**
+
+   ```bash
+   # Backend
+   cp apps/backend/.env.example apps/backend/.env
+   
+   # Frontend
+   cp apps/frontend/.env.example apps/frontend/.env
+   
+   # Worker
+   cp workers/queue/.env.example workers/queue/.env
+   ```
+
+   Edit the `.env` files as needed. For local development with Docker, the defaults should work.
+
+### Running with Docker Compose (Recommended)
+
+Start all services (PostgreSQL, Redis, backend, and worker):
 
 ```bash
-streamlit run main.py
+docker-compose up -d
 ```
-Your ClassGPT app should open in your web browser.
-🌐 Deployment (Streamlit Cloud)
-If you're deploying ClassGPT to Streamlit Cloud, here's how to securely set your API token:
- * Log in to your Streamlit Cloud dashboard.
- * Select your ClassGPT application.
- * Go to the "Settings" (three dots menu next to your app).
- * Navigate to the "Secrets" section.
- * Click "+ Add a secret".
- * For "Key", enter HF_TOKEN.
- * For "Value", paste your actual Hugging Face API token.
- * Click "Save secret".
- * Redeploy your app (or wait for automatic redeployment).
+
+The services will be available at:
+- **Backend API**: http://localhost:3001
+- **Frontend** (run separately): http://localhost:3000
+
+To run the frontend locally:
+
+```bash
+pnpm dev:frontend
+```
+
+### Running in Development Mode (Without Docker)
+
+1. **Start PostgreSQL and Redis:**
+
+   ```bash
+   docker-compose up -d postgres redis
+   ```
+
+2. **Run database migrations:**
+
+   ```bash
+   pnpm db:migrate
+   ```
+
+3. **Seed the database (optional):**
+
+   ```bash
+   pnpm db:seed
+   ```
+
+4. **Start all services in development mode:**
+
+   ```bash
+   # Terminal 1: Backend
+   pnpm dev:backend
    
-# 🗺️ Future Vision & Roadmap
-ClassGPT is just getting started! Our ambitious roadmap includes:
- * Expanded Language Support: Integrating Pidgin and refining performance for Hausa and Arabic.
- * Curriculum Alignment: Developing structured content aligned with specific educational curricula in Nigeria.
- * Offline Access: Enabling learners to download content and continue studying without an internet connection.
- * Educator Tools: Features for teachers to generate lesson plans, track student progress, and customize learning paths.
- * Scalable Microservices Architecture: Transitioning to a modular backend for enhanced performance, reliability, and easier feature development.
- * LLaMA 3 Fine-tuning: Custom fine-tuning of LLaMA 3 models on vast datasets of local language educational content for unparalleled accuracy and fluency.
- * Mobile Applications: Developing native mobile apps for broader accessibility.
-👋 Contributing
-We welcome contributions! If you're passionate about leveraging AI for localized education, we'd love your help.
- * Fork the repository.
- * Create your feature branch (git checkout -b feature/AmazingFeature).
- * Commit your changes (git commit -m 'Add some AmazingFeature').
- * Push to the branch (git push origin feature/AmazingFeature).
- * Open a Pull Request.
-Please ensure your code adheres to best practices and includes tests where appropriate.
-📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+   # Terminal 2: Frontend
+   pnpm dev:frontend
+   
+   # Terminal 3: Worker (optional)
+   cd workers/queue && pnpm dev
+   ```
 
-📧 Contact
- * Muhammad Auwal Aliyu(Abu Mus'ab) - aliyumuhammadauwal92@gmail.com
- * Project Link: https://github.com/MaAbumusAb/ClassGpt-
+The application will be available at:
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:3001
 
+## 📦 Monorepo Structure
 
+```
+classgpt/
+├── apps/
+│   ├── frontend/          # Next.js frontend application
+│   └── backend/           # NestJS backend API with Prisma
+├── packages/
+│   ├── ui/                # Shared React UI components
+│   └── sdk/               # TypeScript SDK for API client
+├── workers/
+│   └── queue/             # BullMQ worker for async tasks
+├── .github/
+│   └── workflows/         # CI/CD workflows
+├── docker-compose.yml     # Docker Compose configuration
+├── pnpm-workspace.yaml    # pnpm workspace configuration
+└── package.json           # Root package.json with scripts
+```
+
+## 🧪 Development Scripts
+
+```bash
+# Install all dependencies
+pnpm install
+
+# Run all apps in development mode
+pnpm dev
+
+# Run specific app
+pnpm dev:frontend
+pnpm dev:backend
+
+# Build all packages
+pnpm build
+
+# Lint all code
+pnpm lint
+
+# Type check all code
+pnpm typecheck
+
+# Run all tests
+pnpm test
+
+# Database operations
+pnpm db:migrate     # Run Prisma migrations
+pnpm db:seed        # Seed the database
+
+# Docker operations
+pnpm docker:up      # Start Docker services
+pnpm docker:down    # Stop Docker services
+```
+
+## 🌟 Features
+
+### Current Implementation
+
+- **Multilingual Chat Interface**: Interactive chat UI with support for multiple languages
+- **AI-Powered Responses**: Mock LLM adapter (can be swapped with OpenAI or other providers)
+- **User Management**: Basic user and chat management with Prisma
+- **Async Processing**: BullMQ worker for background tasks
+- **Type-Safe API**: Full TypeScript support across frontend and backend
+- **Component Library**: Reusable UI components with Tailwind CSS
+
+### Planned Features
+
+- **Clerk Authentication**: User authentication and authorization
+- **OpenAI Integration**: Real LLM responses (set `USE_OPENAI=true`)
+- **Advanced Multilingual Support**: Hausa, Arabic, and Pidgin
+- **Offline Capabilities**: PWA with offline support
+- **Mobile Apps**: Native iOS and Android applications
+
+## 🔐 Environment Variables
+
+### Backend (`apps/backend/.env`)
+
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/classgpt?schema=public"
+USE_OPENAI=false
+OPENAI_API_KEY=""
+PORT=3001
+FRONTEND_URL="http://localhost:3000"
+# TODO: Add Clerk keys when implementing auth
+CLERK_SECRET_KEY=""
+```
+
+### Frontend (`apps/frontend/.env`)
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001
+# TODO: Add Clerk keys when implementing auth
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=""
+```
+
+### Worker (`workers/queue/.env`)
+
+```env
+REDIS_HOST=localhost
+REDIS_PORT=6379
+USE_OPENAI=false
+```
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests for specific package
+pnpm --filter @classgpt/backend test
+pnpm --filter @classgpt/frontend test
+
+# Run tests with coverage
+pnpm --filter @classgpt/backend test:cov
+```
+
+## 📚 Documentation
+
+- [DOCUMENTATION.md](./DOCUMENTATION.md) - Detailed project documentation
+- See individual package READMEs for more specific information
+
+## 🤝 Contributing
+
+We welcome contributions! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## 📧 Contact
+
+- **Muhammad Auwal Aliyu (Abu Mus'ab)** - aliyumuhammadauwal92@gmail.com
+- **Project Link**: https://github.com/MaAbumusAb/classgpt
+
+## 🙏 Acknowledgments
+
+- Powered by LLaMA 3 and OpenAI
+- Built with Next.js, NestJS, and Prisma
+- UI styled with Tailwind CSS

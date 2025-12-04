@@ -1,124 +1,248 @@
-
 # ClassGPT: Your Multilingual AI Study Assistant 🌍📚
 
+A modern monorepo-based educational AI assistant built with Next.js, NestJS, and pnpm workspaces.
 
+## 🏗️ Architecture
 
-## ✨ Vision Statement
+This is a monorepo containing:
 
-**ClassGPT** is an innovative AI-powered educational assistant dedicated to making quality learning accessible and culturally relevant for learners in Nigeria and beyond. Our core mission, as of **June 2025**, is to **bridge educational language barriers** by providing AI-driven explanations, quizzes, and summaries directly in local languages, starting with **Hausa** and **Arabic**, alongside English.
-
-## 🌟 Features (Current MVP)
-
-ClassGPT, in its current Minimum Viable Product (MVP) stage, showcases the power of AI to interact with users in their preferred local language:
-
-* **Multilingual Q&A:** Engage with the AI in **English**, **Hausa**, and **Arabic**. The AI aims to understand your input and provide responses in the selected output language.
-* **Three Core Tasks:**
-    * **Explain It:** Get simple, clear explanations of any topic.
-    * **Generate Quiz:** Create a single quiz question to test your understanding.
-    * **Summarize Topic:** Obtain concise summaries of complex subjects.
-* **Interactive UI:** A user-friendly interface built with Streamlit for a seamless experience.
-* **Powered by LLaMA 3:** Leveraging the advanced capabilities of the LLaMA 3 model via Hugging Face Inference API for intelligent responses.
+- **apps/frontend**: Next.js app with TypeScript and Tailwind CSS
+- **apps/backend**: NestJS API server with Prisma ORM
+- **packages/ui**: Shared React component library
+- **packages/sdk**: Typed API client for frontend-backend communication
+- **workers/queue**: BullMQ worker for async LLM processing
 
 ## 🚀 Getting Started
 
-Follow these steps to get ClassGPT up and running on your local machine.
-
 ### Prerequisites
 
-* Python 3.8+
-* `pip` (Python package installer)
-* A Hugging Face account and an **API Token** with read access.
-
-### ⚠️ Security Warning: Environment Variables
-
-**NEVER hardcode your API tokens directly into your code.** For secure local development and deployment, we use environment variables.
-
-1.  **Generate/Access Your Hugging Face API Token:**
-    * Go to [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens).
-    * Generate a new token (or use an existing one). Ensure it has `read` access.
-    * **Important:** If you've previously shared any token publicly, **revoke it immediately** and generate a new one.
-
-2.  **Set Environment Variables:**
-    Open your terminal or command prompt and set the following variables **before** running the app.
-
-    * **Linux / macOS:**
-        ```bash
-        export HF_TOKEN="hf_YOUR_NEW_TOKEN_HERE"
-        export HF_LLAMA3_MODEL="meta-llama/Llama-3-8b-instruct" # Or "meta-llama/Llama-3-70b-instruct" if you choose
-        ```
-    * **Windows (Command Prompt):**
-        ```cmd
-        set HF_TOKEN="hf_YOUR_NEW_TOKEN_HERE"
-        set HF_LLAMA3_MODEL="meta-llama/Llama-3-8b-instruct"
-        ```
-    *Replace `"hf_YOUR_NEW_TOKEN_HERE"` with your actual Hugging Face API token.*
-    *Ensure `HF_LLAMA3_MODEL` matches the exact ID of the LLaMA 3 model you intend to use on Hugging Face (and that you have accepted its license terms).*
+- Node.js 18+ 
+- pnpm 8+
+- Docker and Docker Compose (for database and Redis)
 
 ### Installation
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone [https://github.com/MaAbumusAb/ClassGpt-](https://github.com/MaAbumusAb/ClassGpt-)
-    cd ClassGpt-
-    ```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/MaAbumusAb/classgpt.git
+   cd classgpt
+   ```
 
-2.  **Create a Virtual Environment (Recommended):**
-    ```bash
-    python -m venv venv
-    # On Linux/macOS:
-    source venv/bin/activate
-    # On Windows:
-    # .\venv\Scripts\activate
-    ```
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
 
-3.  **Install Dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-    *(Ensure your `requirements.txt` contains `streamlit`, `requests`, and `huggingface_hub`)*
+3. **Start database services**
+   ```bash
+   docker-compose up -d
+   ```
 
-### Running the App
-
-Once your environment variables are set and dependencies are installed, run the Streamlit app:
-
-```bash
-streamlit run main.py
-```
-Your ClassGPT app should open in your web browser.
-🌐 Deployment (Streamlit Cloud)
-If you're deploying ClassGPT to Streamlit Cloud, here's how to securely set your API token:
- * Log in to your Streamlit Cloud dashboard.
- * Select your ClassGPT application.
- * Go to the "Settings" (three dots menu next to your app).
- * Navigate to the "Secrets" section.
- * Click "+ Add a secret".
- * For "Key", enter HF_TOKEN.
- * For "Value", paste your actual Hugging Face API token.
- * Click "Save secret".
- * Redeploy your app (or wait for automatic redeployment).
+4. **Set up environment variables**
    
-# 🗺️ Future Vision & Roadmap
-ClassGPT is just getting started! Our ambitious roadmap includes:
- * Expanded Language Support: Integrating Pidgin and refining performance for Hausa and Arabic.
- * Curriculum Alignment: Developing structured content aligned with specific educational curricula in Nigeria.
- * Offline Access: Enabling learners to download content and continue studying without an internet connection.
- * Educator Tools: Features for teachers to generate lesson plans, track student progress, and customize learning paths.
- * Scalable Microservices Architecture: Transitioning to a modular backend for enhanced performance, reliability, and easier feature development.
- * LLaMA 3 Fine-tuning: Custom fine-tuning of LLaMA 3 models on vast datasets of local language educational content for unparalleled accuracy and fluency.
- * Mobile Applications: Developing native mobile apps for broader accessibility.
-👋 Contributing
-We welcome contributions! If you're passionate about leveraging AI for localized education, we'd love your help.
- * Fork the repository.
- * Create your feature branch (git checkout -b feature/AmazingFeature).
- * Commit your changes (git commit -m 'Add some AmazingFeature').
- * Push to the branch (git push origin feature/AmazingFeature).
- * Open a Pull Request.
-Please ensure your code adheres to best practices and includes tests where appropriate.
-📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+   For backend:
+   ```bash
+   cp apps/backend/.env.example apps/backend/.env
+   ```
+   
+   For frontend:
+   ```bash
+   cp apps/frontend/.env.example apps/frontend/.env
+   ```
+   
+   For worker:
+   ```bash
+   cp workers/queue/.env.example workers/queue/.env
+   ```
 
-📧 Contact
- * Muhammad Auwal Aliyu(Abu Mus'ab) - aliyumuhammadauwal92@gmail.com
- * Project Link: https://github.com/MaAbumusAb/ClassGpt-
+5. **Run database migrations**
+   ```bash
+   cd apps/backend
+   pnpm prisma:generate
+   pnpm prisma:migrate
+   pnpm prisma:seed
+   cd ../..
+   ```
 
+6. **Start development servers**
+   ```bash
+   # Terminal 1 - Backend
+   cd apps/backend
+   pnpm dev
 
+   # Terminal 2 - Frontend
+   cd apps/frontend
+   pnpm dev
+
+   # Terminal 3 - Queue Worker (optional)
+   cd workers/queue
+   pnpm dev
+   ```
+
+7. **Open the application**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:3001
+
+## 📦 Monorepo Structure
+
+```
+classgpt/
+├── apps/
+│   ├── frontend/          # Next.js frontend app
+│   │   ├── pages/         # Next.js pages
+│   │   ├── components/    # React components
+│   │   └── styles/        # Global styles
+│   └── backend/           # NestJS backend API
+│       ├── src/
+│       │   ├── chats/     # Chat module
+│       │   ├── auth/      # Auth module (stubbed)
+│       │   └── llm-provider/ # LLM provider interface
+│       └── prisma/        # Database schema and migrations
+├── packages/
+│   ├── ui/                # Shared UI components
+│   └── sdk/               # API client SDK
+├── workers/
+│   └── queue/             # BullMQ worker for async jobs
+├── docker-compose.yml     # Postgres + Redis services
+└── pnpm-workspace.yaml    # pnpm workspace configuration
+```
+
+## 🗄️ Database Setup
+
+### Migrations
+
+Create a new migration:
+```bash
+cd apps/backend
+pnpm prisma migrate dev --name your_migration_name
+```
+
+Apply migrations in production:
+```bash
+cd apps/backend
+pnpm prisma migrate deploy
+```
+
+### Seed Data
+
+Run the seed script to populate the database with test data:
+```bash
+cd apps/backend
+pnpm prisma:seed
+```
+
+## 🧪 Testing
+
+Run all tests:
+```bash
+pnpm test
+```
+
+Run tests for specific workspace:
+```bash
+cd apps/backend
+pnpm test
+
+cd apps/frontend
+pnpm test
+```
+
+## 🔨 Building
+
+Build all packages:
+```bash
+pnpm build
+```
+
+Build specific workspace:
+```bash
+cd apps/frontend
+pnpm build
+```
+
+## 🎨 Code Quality
+
+### Linting
+```bash
+pnpm lint
+```
+
+### Type Checking
+```bash
+pnpm typecheck
+```
+
+### Formatting
+```bash
+pnpm format        # Format code
+pnpm format:check  # Check formatting
+```
+
+## 🐳 Docker
+
+### Build Backend
+```bash
+docker build -f apps/backend/Dockerfile -t classgpt-backend .
+```
+
+### Build Worker
+```bash
+docker build -f workers/queue/Dockerfile -t classgpt-worker .
+```
+
+## 🔑 Environment Variables
+
+### Backend (.env)
+- `DATABASE_URL`: PostgreSQL connection string
+- `REDIS_URL`: Redis connection string
+- `USE_OPENAI`: Set to 'true' to use OpenAI (requires API key)
+- `OPENAI_API_KEY`: Your OpenAI API key (if using OpenAI)
+
+### Frontend (.env)
+- `NEXT_PUBLIC_API_URL`: Backend API URL
+
+### Worker (.env)
+- `REDIS_HOST`: Redis hostname
+- `REDIS_PORT`: Redis port
+
+## 🔐 Authentication
+
+Authentication is currently stubbed with TODOs for Clerk integration. To implement:
+
+1. Sign up at [clerk.com](https://clerk.com)
+2. Add Clerk keys to environment variables
+3. Implement the auth guard in `apps/backend/src/auth/`
+4. Add Clerk provider to frontend
+
+## 📝 Available Scripts
+
+Root level:
+- `pnpm dev` - Start all apps in development mode
+- `pnpm build` - Build all packages and apps
+- `pnpm lint` - Lint all workspaces
+- `pnpm test` - Run tests in all workspaces
+- `pnpm typecheck` - Type check all workspaces
+- `pnpm clean` - Clean build outputs
+
+## 🌟 Features
+
+- **TypeScript** - Full type safety across the stack
+- **Monorepo** - Efficient code sharing with pnpm workspaces
+- **Modern UI** - Next.js 14 with Tailwind CSS
+- **API** - NestJS with Prisma ORM
+- **Queue** - BullMQ for background job processing
+- **Database** - PostgreSQL with Prisma migrations
+- **Caching** - Redis for queue and caching
+- **Testing** - Jest for unit tests
+- **CI/CD** - GitHub Actions workflow
+- **Docker** - Containerized services
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## 📧 Contact
+
+Muhammad Auwal Aliyu (Abu Mus'ab) - aliyumuhammadauwal92@gmail.com
+
+Project Link: https://github.com/MaAbumusAb/classgpt

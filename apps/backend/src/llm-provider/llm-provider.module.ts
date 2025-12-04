@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { LLMProvider } from './llm-provider.interface';
 import { MockLLMProvider } from './mock-llm.provider';
 import { OpenAILLMProvider } from './openai-llm.provider';
 

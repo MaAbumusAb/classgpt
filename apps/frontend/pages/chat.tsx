@@ -3,20 +3,27 @@ import Head from 'next/head';
 import Header from '@/components/Header';
 import ChatUI from '@/components/ChatUI';
 
+type Message = {
+  id: string;
+  sender: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+};
+
 export default function ChatPage() {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      sender: 'assistant' as const,
+      sender: 'assistant',
       content: 'Hello! How can I help you learn today?',
       timestamp: new Date(),
     },
   ]);
 
   const handleSendMessage = (content: string) => {
-    const userMessage = {
+    const userMessage: Message = {
       id: Date.now().toString(),
-      sender: 'user' as const,
+      sender: 'user',
       content,
       timestamp: new Date(),
     };
@@ -25,9 +32,9 @@ export default function ChatPage() {
 
     // Simulate AI response
     setTimeout(() => {
-      const aiMessage = {
+      const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        sender: 'assistant' as const,
+        sender: 'assistant',
         content: `I received your message: "${content}". This is a demo response.`,
         timestamp: new Date(),
       };

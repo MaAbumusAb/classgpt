@@ -5,7 +5,7 @@ export class AuthService {
   // TODO: Integrate Clerk authentication
   // See: https://clerk.com/docs
   
-  async validateUser(token: string): Promise<any> {
+  async validateUser(_token: string): Promise<{ id: string; email: string }> {
     // TODO: Validate JWT token with Clerk
     // For now, return a mock user
     return {

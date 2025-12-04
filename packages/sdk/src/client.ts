@@ -20,10 +20,10 @@ export class ClassGPTClient {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...(this.apiKey && { Authorization: `Bearer ${this.apiKey}` }),
-      ...options.headers,
+      ...((options.headers || {}) as Record<string, string>),
     };
 
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
@@ -35,7 +35,7 @@ export class ClassGPTClient {
       throw new Error(`API Error: ${response.status} ${response.statusText}`);
     }
 
-    return response.json();
+    return response.json() as Promise<T>;
   }
 
   // User endpoints

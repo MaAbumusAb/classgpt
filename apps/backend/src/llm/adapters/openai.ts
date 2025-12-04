@@ -33,11 +33,19 @@ export class OpenAIAdapter implements LLMProvider {
       throw new Error(`OpenAI API error: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as {
+      choices?: Array<{ message?: { content?: string } }>;
+      model?: string;
+      usage?: {
+        prompt_tokens?: number;
+        completion_tokens?: number;
+        total_tokens?: number;
+      };
+    };
 
     return {
-      content: data.choices[0]?.message?.content || '',
-      model: data.model,
+      content: data.choices?.[0]?.message?.content || '',
+      model: data.model || this.model,
       usage: {
         promptTokens: data.usage?.prompt_tokens || 0,
         completionTokens: data.usage?.completion_tokens || 0,

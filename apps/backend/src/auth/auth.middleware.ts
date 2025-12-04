@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  use(req: Request, res: Response, next: NextFunction) {
+  use(_req: Request, _res: Response, next: NextFunction) {
     // TODO: Implement Clerk authentication
     // For now, this is a stub that allows all requests
     

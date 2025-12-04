@@ -45,7 +45,7 @@ export class ChatsService {
 
   async sendMessage(chatId: string, content: string) {
     // Create user message
-    const userMessage = await prisma.message.create({
+    await prisma.message.create({
       data: {
         chatId,
         content,

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Header from '../components/Header';
 import { Button, ChatBubble } from '@classgpt/ui';
-import { ClassGptClient } from '@classgpt/sdk';
+// import { ClassGptClient } from '@classgpt/sdk';
 
 interface Message {
   id: string;
@@ -23,8 +23,8 @@ export default function Chat() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // TODO: Initialize with actual backend URL from env
-  const client = new ClassGptClient();
+  // Initialize API client (will be used when backend is connected)
+  // const client = new ClassGptClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

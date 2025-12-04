@@ -3,7 +3,7 @@ import Redis from 'ioredis';
 
 // Mock LLM Provider (would be replaced with actual implementation)
 class MockLLMProvider {
-  async process(data: any): Promise<string> {
+  async process(data: { prompt?: string }): Promise<string> {
     console.log('Processing job with data:', data);
     // Simulate LLM processing
     await new Promise((resolve) => setTimeout(resolve, 1000));
